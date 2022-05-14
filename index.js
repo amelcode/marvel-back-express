@@ -11,11 +11,11 @@ const uid2 = require("uid2");
 const User = require("./models/User");
 
 const app = express();
-const corsOptions ={
-  origin:'https://marvel-back-express.herokuapp.com', 
-  credentials:true,
-  optionSuccessStatus:200
-}
+const corsOptions = {
+  origin: "http://localhost:3001",
+  credentials: true,
+  optionSuccessStatus: 200,
+};
 
 app.use(formidable());
 app.use(cors(corsOptions));
@@ -142,7 +142,6 @@ app.put("/addFavorits", async (req, res) => {
     const charactersNewFavorits = req.fields.favorites.favoritesCharacters;
     console.log("charactersNewFavorits", charactersNewFavorits);
 
-    
     if (comicsUserFavorits !== [] && comicsNewFavorits !== undefined) {
       if (!comicsUserFavorits.includes(comicsNewFavorits)) {
         const comics = comicsUserFavorits.concat(comicsNewFavorits);
@@ -204,14 +203,14 @@ app.put("/addFavorits", async (req, res) => {
 });
 
 app.get("/favorites", async (req, res) => {
-  try {    
+  try {
     const token = req.query.token;
     const user = await User.findOne({ token: "KVsBmaxKHPrlu6a1" });
     res.json(user.favorites);
   } catch (error) {
     console.log(error);
   }
-})
+});
 
 app.listen(process.env.PORT, () => {
   console.log("Server has started");
