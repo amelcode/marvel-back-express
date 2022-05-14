@@ -11,11 +11,16 @@ const uid2 = require("uid2");
 const User = require("./models/User");
 
 const app = express();
+const corsOptions ={
+  origin:'https://marvel-back-express.herokuapp.com', 
+  credentials:true,
+  optionSuccessStatus:200
+}
 
 app.use(formidable());
-app.use(cors());
+app.use(cors(corsOptions));
 dotenv.config();
-mongoose.connect("mongodb://localhost/marvel");
+mongoose.connect(process.env.DB_CONNECTION);
 
 //API MARVEL
 app.get("/comics", async (req, res) => {
