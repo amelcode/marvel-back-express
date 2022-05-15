@@ -205,8 +205,8 @@ app.put("/addFavorits", async (req, res) => {
 
 app.get("/favorites", async (req, res) => {
   try {
-    const token = req.query.token;
-    const user = await User.findOne({ token: "KVsBmaxKHPrlu6a1" });
+    const token = req.headers.authorization.replace("Bearer ", "")
+    const user = await User.findOne({ token: token });
     res.json(user.favorites);
   } catch (error) {
     console.log(error);
