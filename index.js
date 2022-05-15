@@ -2,7 +2,7 @@ const express = require("express");
 const formidable = require("express-formidable");
 const mongoose = require("mongoose");
 const axios = require("axios");
-const cors = require("cors");
+// const cors = require("cors");
 const dotenv = require("dotenv");
 const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
@@ -11,14 +11,14 @@ const uid2 = require("uid2");
 const User = require("./models/User");
 
 const app = express();
-const corsOptions = {
-  origin: ["http://localhost:3001", "https://marvel-font-react.netlify.app/"],
-  credentials: true,
-  optionSuccessStatus: 200,
-};
+// const corsOptions = {
+//   origin: ["http://localhost:3001", "https://marvel-font-react.netlify.app/"],
+//   credentials: true,
+//   optionSuccessStatus: 200,
+// };
 
 app.use(formidable());
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 dotenv.config();
 mongoose.connect(process.env.DB_CONNECTION);
 
