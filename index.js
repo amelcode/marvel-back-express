@@ -12,7 +12,7 @@ const User = require("./models/User");
 
 const app = express();
 const corsOptions = {
-  origin: ["http://localhost:3001", "https://marvel-font-react.netlify.app/"],
+  origin: ["http://localhost:3001", "https://marvel-font-react.netlify.app/", "https://marvel-font-react.netlify.app/comics]", "https://marvel-font-react.netlify.app/characters", "https://marvel-font-react.netlify.app/login", "https://marvel-font-react.netlify.app/register", "https://marvel-font-react.netlify.app/favorites"],
   credentials: true,
   optionSuccessStatus: 200,
 };
