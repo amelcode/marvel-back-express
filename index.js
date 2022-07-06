@@ -123,75 +123,56 @@ app.put("/addFavorits", async (req, res) => {
   try {
     let message = "";
     console.log("req.fields", req.fields);
-    console.log("req.fields.token", req.fields.token);
 
     const user = await User.findOne({ token: req.fields.token });
-    console.log("user", user);
-    //favorites: { comics: [], characters: [] },
-
-    console.log("user._id", user._id);
 
     const comicsUserFavorits = user.favorites.comics;
     console.log("comicsUserFavorits", comicsUserFavorits);
 
-    const comicsNewFavorits = req.fields.favorites.favoritesComics;
-    console.log("comicsNewFavorits", comicsNewFavorits);
-
     const charactersUserFavorits = user.favorites.characters;
     console.log("charactersUserFavorits", charactersUserFavorits);
 
-    const charactersNewFavorits = req.fields.favorites.favoritesCharacters;
-    console.log("charactersNewFavorits", charactersNewFavorits);
-
-    if (comicsUserFavorits !== [] && comicsNewFavorits !== undefined) {
-      if (!comicsUserFavorits.includes(comicsNewFavorits)) {
-        const comics = comicsUserFavorits.concat(comicsNewFavorits);
-        await User.findByIdAndUpdate(user._id, {
-          favorites: {
-            comics: comics,
-            characters: charactersUserFavorits,
-          },
-        });
-        message = "Comics added to favorits";
-      } else {
-        message = "Comics already in favorits";
-      }
-    } else if (comicsUserFavorits === [] && comicsNewFavorits !== undefined) {
-      await User.findByIdAndUpdate(user._id, {
-        favorites: {
-          comics: comicsNewFavorits,
-          characters: charactersUserFavorits,
-        },
-      });
-      message = "Comics added to favorits";
-    }
-
-    if (charactersUserFavorits !== [] && charactersNewFavorits !== undefined) {
-      if (!charactersUserFavorits.includes(charactersNewFavorits)) {
-        const characters = charactersUserFavorits.concat(charactersNewFavorits);
-        console.log("characters concat", characters);
+    if (req.fields.categories === "character") {
+      if (charactersUserFavorits.length === 0) {
+        console.log("characters user empty");
         await User.findByIdAndUpdate(user._id, {
           favorites: {
             comics: comicsUserFavorits,
-            characters: characters,
+            characters: req.fields.data,
           },
         });
-        message = "Characters added to favorits";
+        message = "added to favorits";
       } else {
-        message = "Character already in favorits";
+        charactersUserFavorits.push(req.fields.data);
+        await User.findByIdAndUpdate(user._id, {
+          favorites: {
+            comics: comicsUserFavorits,
+            characters: charactersUserFavorits,
+          },
+        });
+        message = "add to favorits";
+        
       }
-    } else if (
-      charactersUserFavorits === [] &&
-      charactersNewFavorits !== undefined
-    ) {
-      console.log("e", e);
-      await User.findByIdAndUpdate(user._id, {
-        favorites: {
-          comics: comicsUserFavorits,
-          characters: charactersNewFavorits,
-        },
-      });
-      message = "Characters added to favorits";
+    } else if (req.fields.categories === "comic") {
+      if (comicsUserFavorits.length === 0) {
+        console.log("characters user empty");
+        await User.findByIdAndUpdate(user._id, {
+          favorites: {
+            comics: req.fields.data,
+            characters: charactersUserFavorits,
+          },
+        });
+        message = "added to favorits";
+      } else {
+        comicsUserFavorits.push(req.fields.data);
+        await User.findByIdAndUpdate(user._id, {
+          favorites: {
+            comics: comicsUserFavorits,
+            characters: charactersUserFavorits,
+          },
+        });
+        message = "add to favorits";
+      }
     }
 
     /* Returning the comics array to the frontend. */
@@ -203,10 +184,71 @@ app.put("/addFavorits", async (req, res) => {
   }
 });
 
+// if (req.fields.categories === "comics") {
+//   const comicsNewFavorits = req.fields.data;
+//   console.log("comicsNewFavorits", comicsNewFavorits);
+// } else if (req.fields.categories === "characters") {
+//   const charactersNewFavorits = req.fields.data;
+//   console.log("charactersNewFavorits", charactersNewFavorits);
+// }
+
+// if (comicsUserFavorits !== [] && comicsNewFavorits !== undefined) {
+//   if (!comicsUserFavorits.includes(comicsNewFavorits)) {
+//     const comics = comicsUserFavorits.concat(comicsNewFavorits);
+//     await User.findByIdAndUpdate(user._id, {
+//       favorites: {
+//         comics: comics,
+//         characters: charactersUserFavorits,
+//       },
+//     });
+//     message = "Comics added to favorits";
+//   } else {
+//     message = "Comics already in favorits";
+//   }
+// } else if (comicsUserFavorits === [] && comicsNewFavorits !== undefined) {
+//   await User.findByIdAndUpdate(user._id, {
+//     favorites: {
+//       comics: comicsNewFavorits,
+//       characters: charactersUserFavorits,
+//     },
+//   });
+//   message = "Comics added to favorits";
+// }
+
+// if (charactersUserFavorits !== [] && req.fields.categories === "characters") {
+//   // if (!charactersUserFavorits.includes(req.fields.data._id)) {
+//     console.log('req.fields.data._id', req.fields.data._id);
+//     // const characters = charactersUserFavorits.concat(charactersNewFavorits);
+//     console.log("characters concat", characters);
+//     // await User.findByIdAndUpdate(user._id, {
+//     //   favorites: {
+//     //     comics: comicsUserFavorits,
+//     //     characters: characters,
+//     //   },
+//     // });
+//     // message = "Characters added to favorits";
+//   } else {
+//     message = "Character already in favorits";
+//   }
+// } else if (
+//   charactersUserFavorits === [] &&
+//   charactersNewFavorits !== undefined
+// ) {
+//   console.log("e", e);
+//   await User.findByIdAndUpdate(user._id, {
+//     favorites: {
+//       comics: comicsUserFavorits,
+//       characters: charactersNewFavorits,
+//     },
+//   });
+//   message = "Characters added to favorits";
+// }
+
 app.get("/favorites", async (req, res) => {
   try {
     const token = req.headers.authorization.replace("Bearer ", "");
     const user = await User.findOne({ token: token });
+
     if (
       user.favorites.comics.length === 0 &&
       user.favorites.characters.length === 0
