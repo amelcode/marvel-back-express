@@ -12,8 +12,7 @@ const User = require("./models/User");
 
 const app = express();
 const corsOptions = {
-  // origin: ["http://localhost:3001", "https://marvel-font-react.netlify.app/", "https://marvel-font-react.netlify.app/comics]", "https://marvel-font-react.netlify.app/characters", "https://marvel-font-react.netlify.app/login", "https://marvel-font-react.netlify.app/register", "https://marvel-font-react.netlify.app/favorites"],
-  origin:'*',
+  origin: "*",
   credentials: true,
   optionSuccessStatus: 200,
 };
@@ -206,11 +205,18 @@ app.put("/addFavorits", async (req, res) => {
 
 app.get("/favorites", async (req, res) => {
   try {
-    const token = req.headers.authorization.replace("Bearer ", "")
+    const token = req.headers.authorization.replace("Bearer ", "");
     const user = await User.findOne({ token: token });
+    if (
+      user.favorites.comics.length === 0 &&
+      user.favorites.characters.length === 0
+    ) {
+      throw "No favorites";
+    }
+    console.log("user", user);
     res.json(user.favorites);
   } catch (error) {
-    console.log(error);
+    res.json({ error: error });
   }
 });
 
