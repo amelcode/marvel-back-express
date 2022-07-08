@@ -87,8 +87,9 @@ app.post("/register", async (req, res) => {
         token: token,
       });
       await newUser.save();
+      console.log('newUser', newUser);
 
-      res.json({ token: token });
+      res.json({ token: newUser.token, favorites: newUser.favorites });
     }
   } catch (error) {
     console.log(error);
@@ -99,6 +100,7 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const userData = await User.findOne({ email: req.fields.email });
+    console.log('userData', userData);
 
     if (userData.email === undefined) {
       throw "Information not valid";
@@ -107,7 +109,7 @@ app.post("/login", async (req, res) => {
       const salt = userData.salt;
       const hash = SHA256(password + salt).toString(encBase64);
       if (hash === userData.hash) {
-        res.json({ token: userData.token });
+        res.json({ token: userData.token, favorites: userData.favorites });
       } else {
         throw "Information not valid";
       }
