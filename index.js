@@ -183,67 +183,6 @@ app.put("/addFavorits", async (req, res) => {
     console.log(error);
   }
 });
-
-// if (req.fields.categories === "comics") {
-//   const comicsNewFavorits = req.fields.data;
-//   console.log("comicsNewFavorits", comicsNewFavorits);
-// } else if (req.fields.categories === "characters") {
-//   const charactersNewFavorits = req.fields.data;
-//   console.log("charactersNewFavorits", charactersNewFavorits);
-// }
-
-// if (comicsUserFavorits !== [] && comicsNewFavorits !== undefined) {
-//   if (!comicsUserFavorits.includes(comicsNewFavorits)) {
-//     const comics = comicsUserFavorits.concat(comicsNewFavorits);
-//     await User.findByIdAndUpdate(user._id, {
-//       favorites: {
-//         comics: comics,
-//         characters: charactersUserFavorits,
-//       },
-//     });
-//     message = "Comics added to favorits";
-//   } else {
-//     message = "Comics already in favorits";
-//   }
-// } else if (comicsUserFavorits === [] && comicsNewFavorits !== undefined) {
-//   await User.findByIdAndUpdate(user._id, {
-//     favorites: {
-//       comics: comicsNewFavorits,
-//       characters: charactersUserFavorits,
-//     },
-//   });
-//   message = "Comics added to favorits";
-// }
-
-// if (charactersUserFavorits !== [] && req.fields.categories === "characters") {
-//   // if (!charactersUserFavorits.includes(req.fields.data._id)) {
-//     console.log('req.fields.data._id', req.fields.data._id);
-//     // const characters = charactersUserFavorits.concat(charactersNewFavorits);
-//     console.log("characters concat", characters);
-//     // await User.findByIdAndUpdate(user._id, {
-//     //   favorites: {
-//     //     comics: comicsUserFavorits,
-//     //     characters: characters,
-//     //   },
-//     // });
-//     // message = "Characters added to favorits";
-//   } else {
-//     message = "Character already in favorits";
-//   }
-// } else if (
-//   charactersUserFavorits === [] &&
-//   charactersNewFavorits !== undefined
-// ) {
-//   console.log("e", e);
-//   await User.findByIdAndUpdate(user._id, {
-//     favorites: {
-//       comics: comicsUserFavorits,
-//       characters: charactersNewFavorits,
-//     },
-//   });
-//   message = "Characters added to favorits";
-// }
-
 app.get("/favorites", async (req, res) => {
   try {
     const token = req.headers.authorization.replace("Bearer ", "");
