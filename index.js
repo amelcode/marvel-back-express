@@ -119,21 +119,22 @@ app.post("/login", async (req, res) => {
 
 // ROUTES FAVORITES
 
-app.put("/addFavorits", async (req, res) => {
+app.put("/addFavorit", async (req, res) => {
   try {
     let message = "";
     console.log("req.fields", req.fields);
 
     const user = await User.findOne({ token: req.fields.token });
+    console.log('user', user);
 
     const comicsUserFavorits = user.favorites.comics;
-    console.log("comicsUserFavorits", comicsUserFavorits);
+    // console.log("comicsUserFavorits", comicsUserFavorits);
 
     const charactersUserFavorits = user.favorites.characters;
-    console.log("charactersUserFavorits", charactersUserFavorits);
+    // console.log("charactersUserFavorits", charactersUserFavorits);
 
     if (req.fields.categories === "character") {
-      if (charactersUserFavorits.length === 0) {
+      if (charactersUserFavorits?.length === 0) {
         console.log("characters user empty");
         await User.findByIdAndUpdate(user._id, {
           favorites: {
