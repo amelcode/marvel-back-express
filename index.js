@@ -135,7 +135,7 @@ app.put("/addFavorit", async (req, res) => {
     const charactersUserFavorits = user.favorites.characters;
     // console.log("charactersUserFavorits", charactersUserFavorits);
 
-    if (req.fields.categories === "character") {
+    if (req.fields.categories === "characters") {
       if (charactersUserFavorits?.length === 0) {
         console.log("characters user empty");
         await User.findByIdAndUpdate(user._id, {
