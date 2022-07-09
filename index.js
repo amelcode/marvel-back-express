@@ -36,8 +36,9 @@ app.get("/comics", async (req, res) => {
   try {
     const title = req.query.title ? req.query.title : "";
     const skip = req.query.skip ? req.query.skip : 0;
+    const limit = req.query.limit ? req.query.limit : 100;
     const response = await axios.get(
-      `https://lereacteur-marvel-api.herokuapp.com/comics?apiKey=${process.env.API_KEY}&title=${title}&skip=${skip}`
+      `https://lereacteur-marvel-api.herokuapp.com/comics?apiKey=${process.env.API_KEY}&title=${title}&skip=${skip}&limit=${limit}`
     );
 
     res.json(response.data);
@@ -50,8 +51,9 @@ app.get("/characters", async (req, res) => {
   try {
     const name = req.query.name ? req.query.name : "";
     const skip = req.query.skip ? req.query.skip : 0;
+    const limit = req.query.limit ? req.query.limit : 100;
     const response = await axios.get(
-      `https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.API_KEY}&name=${name}&skip=${skip}`
+      `https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.API_KEY}&name=${name}&skip=${skip}&limit=${limit}`
     );
     res.json(response.data);
   } catch (error) {
@@ -95,7 +97,7 @@ app.post("/register", async (req, res) => {
         token: token,
       });
       await newUser.save();
-      console.log('newUser', newUser);
+      console.log("newUser", newUser);
 
       res.json({ token: newUser.token, favorites: newUser.favorites });
     }
@@ -108,7 +110,7 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const userData = await User.findOne({ email: req.fields.email });
-    console.log('userData', userData);
+    console.log("userData", userData);
 
     if (userData.email === undefined) {
       throw "Information not valid";
@@ -135,7 +137,7 @@ app.put("/addFavorit", async (req, res) => {
     console.log("req.fields", req.fields);
 
     const user = await User.findOne({ token: req.fields.token });
-    console.log('user', user);
+    console.log("user", user);
 
     const comicsUserFavorits = user.favorites.comics;
     // console.log("comicsUserFavorits", comicsUserFavorits);
@@ -162,9 +164,8 @@ app.put("/addFavorit", async (req, res) => {
           },
         });
         message = "add to favorits";
-        
       }
-    } else if (req.fields.categories === "comic") {
+    } else if (req.fields.categories === "comics") {
       if (comicsUserFavorits.length === 0) {
         console.log("characters user empty");
         await User.findByIdAndUpdate(user._id, {
@@ -185,11 +186,10 @@ app.put("/addFavorit", async (req, res) => {
         message = "add to favorits";
       }
     }
+    console.log("user", user);
 
     /* Returning the comics array to the frontend. */
-    res.json({
-      message: message,
-    });
+    res.json(user.favorites);
   } catch (error) {
     console.log(error);
   }
