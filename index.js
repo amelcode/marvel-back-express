@@ -23,6 +23,14 @@ app.use(cors(corsOptions));
 dotenv.config();
 mongoose.connect(process.env.DB_CONNECTION);
 
+app.get("/", async (req, res) => {
+  try {
+    res.json({ message: "Hello to marvel comics API" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 //API MARVEL
 app.get("/comics", async (req, res) => {
   try {
